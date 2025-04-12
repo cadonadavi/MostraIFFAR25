@@ -13,8 +13,8 @@ def executar():
                 sys.exit()
             elif evento.type == pygame.KEYDOWN:
                 if evento.key == pygame.K_ESCAPE:
-                    return  # volta para o menu
+                    return
 
         tela.fill((50, 50, 50))
         pygame.display.flip()
-        clock.tick(60)
+        clock.tick(10)

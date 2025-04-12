@@ -17,4 +17,4 @@ def executar_creditos():
 
         tela.fill((0, 0, 0))
         pygame.display.flip()
-        clock.tick(60)
+        clock.tick(10)
