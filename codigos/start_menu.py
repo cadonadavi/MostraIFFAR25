@@ -4,6 +4,7 @@ import os
 import config
 import jogo
 import creditos
+from pathlib import Path
 
 def mostrar_menu():
     tela = config.tela
@@ -27,51 +28,106 @@ def mostrar_menu():
         selecionado = pygame.image.load(selecionado_path)
         return pygame.transform.scale(normal, (240, 60)), pygame.transform.scale(selecionado, (360, 90))
 
-    botao_start, botao_start_sel = carregar_botao("imagens/start.png", "imagens/start_selected.png")
-    botao_cred, botao_cred_sel = carregar_botao("imagens/creditos.png", "imagens/creditos_selected.png")
-    botao_sair, botao_sair_sel = carregar_botao("imagens/sair.png", "imagens/sair_selected.png")
+    botao_start, botao_start_sel = carregar_botao("imagens/botoes/start.png", "imagens/botoes/start_selected.png")
+    botao_cred, botao_cred_sel = carregar_botao("imagens/botoes/creditos.png", "imagens/botoes/creditos_selected.png")
+    botao_sair, botao_sair_sel = carregar_botao("imagens/botoes/sair.png", "imagens/botoes/sair_selected.png")
+    botao_continue, botao_continue_sel = carregar_botao("imagens/botoes/continue.png", "imagens/botoes/continue_selected.png")
+    botao_novo, botao_novo_sel = carregar_botao("imagens/botoes/novo.png", "imagens/botoes/novo_selected.png")
+    botao_voltar, botao_voltar_sel = carregar_botao("imagens/botoes/voltar.png", "imagens/botoes/voltar_selected.png")
 
-    botoes = [
+    botoes_menu = [
         {"normal": botao_start, "sel": botao_start_sel, "nome": "Start"},
         {"normal": botao_cred, "sel": botao_cred_sel, "nome": "Créditos"},
         {"normal": botao_sair, "sel": botao_sair_sel, "nome": "Sair"}
     ]
 
-    indice = 0
+    botoes_saving = [
+        {"normal": botao_continue, "sel": botao_continue_sel, "nome": "Continuar"},
+        {"normal": botao_novo, "sel": botao_novo_sel, "nome": "Novo Jogo"},
+        {"normal": botao_voltar, "sel": botao_voltar_sel, "nome": "Voltar"}
+    ]
+
+    indicevertical = 0
+    indicehorizontal = 0
     frame_index = 0
+    save = Path("save.txt")
+    estado_menu = "menu"  # 'menu' ou 'continuar'
 
     while True:
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+
             elif evento.type == pygame.KEYDOWN:
                 if evento.key == pygame.K_w:
-                    indice = (indice - 1) % len(botoes)
-                elif evento.key == pygame.K_s:
-                    indice = (indice + 1) % len(botoes)
-                elif evento.key == pygame.K_RETURN:
-                    if botoes[indice]["nome"] == "Start":
-                        jogo.executar()
-                    elif botoes[indice]["nome"] == "Créditos":
-                        creditos.executar_creditos()
-                    elif botoes[indice]["nome"] == "Sair":
-                        pygame.quit()
-                        sys.exit()
+                    indicevertical = (indicevertical - 1) % (len(botoes_menu) if estado_menu == "menu" else len(botoes_saving))
 
+                elif evento.key == pygame.K_s:
+                    indicevertical = (indicevertical + 1) % (len(botoes_menu) if estado_menu == "menu" else len(botoes_saving))
+
+                elif evento.key == pygame.K_a:
+                    indicehorizontal = (indicehorizontal - 1) % (len(botoes_menu) if estado_menu == "menu" else len(botoes_saving))
+
+                elif evento.key == pygame.K_d:
+                    indicehorizontal = (indicehorizontal + 1) % (len(botoes_menu) if estado_menu == "menu" else len(botoes_saving))
+
+                elif evento.key == pygame.K_ESCAPE:
+                    estado_menu = "menu"
+                    indicevertical = 0
+
+                elif evento.key == pygame.K_RETURN:
+                    if estado_menu == "menu":
+                        if botoes_menu[indicevertical]["nome"] == "Start":
+                            if save.exists():
+                                estado_menu = "continuar"
+                                indicevertical = 0
+                            else:
+                                with open("save.txt", "a") as arquivo_save:
+                                    arquivo_save.write("")
+                                jogo.executar()
+
+                        elif botoes_menu[indicevertical]["nome"] == "Créditos":
+                            creditos.executar_creditos()
+
+                        elif botoes_menu[indicevertical]["nome"] == "Sair":
+                            pygame.quit()
+                            sys.exit()
+
+                    elif estado_menu == "continuar":
+                        if botoes_saving[indicehorizontal]["nome"] == "Continuar":
+                            jogo.executar()
+                        
+                        elif botoes_saving[indicehorizontal]["nome"] == "Novo Jogo":
+                            with open("save.txt", "w") as arquivo_save:
+                                arquivo_save.write("")
+                            jogo.executar()
+                        
+                        elif botoes_saving[indicehorizontal]["nome"] == "Voltar":
+                            estado_menu = "menu"                      
+
+        # Desenho da tela
         tela.blit(frames[frame_index], (0, 0))
         frame_index = (frame_index + 1) % len(frames)
 
         tela.blit(logo, (80, 135))
 
-        y_base = 480
-        for i, botao in enumerate(botoes):
-            img = botao["sel"] if i == indice else botao["normal"]
-            tela.blit(img, (112, y_base))
-            y_base += img.get_height() + 20
+        if estado_menu == "menu":
+            y_base = 480
+            for i, botao in enumerate(botoes_menu):
+                img = botao["sel"] if i == indicevertical else botao["normal"]
+                tela.blit(img, (112, y_base))
+                y_base += img.get_height() + 20
+
+        elif estado_menu == "continuar":
+            x_base = 220
+            for i, botao in enumerate(botoes_saving):
+                img = botao["sel"] if i == indicehorizontal else botao["normal"]
+                tela.blit(img, (x_base, 640))
+                x_base += img.get_width() + 20
 
         pygame.display.flip()
         clock.tick(10)
-    
+
 if __name__ == "__main__":
     mostrar_menu()
