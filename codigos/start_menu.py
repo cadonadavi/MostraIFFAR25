@@ -60,16 +60,16 @@ def mostrar_menu():
                 sys.exit()
 
             elif evento.type == pygame.KEYDOWN:
-                if evento.key == pygame.K_w:
+                if evento.key == pygame.K_w or evento.key == pygame.K_UP:
                     indicevertical = (indicevertical - 1) % (len(botoes_menu) if estado_menu == "menu" else len(botoes_saving))
 
-                elif evento.key == pygame.K_s:
+                elif evento.key == pygame.K_s or evento.key == pygame.K_DOWN:
                     indicevertical = (indicevertical + 1) % (len(botoes_menu) if estado_menu == "menu" else len(botoes_saving))
 
-                elif evento.key == pygame.K_a:
+                elif evento.key == pygame.K_a  or evento.key == pygame.K_LEFT:
                     indicehorizontal = (indicehorizontal - 1) % (len(botoes_menu) if estado_menu == "menu" else len(botoes_saving))
 
-                elif evento.key == pygame.K_d:
+                elif evento.key == pygame.K_d or evento.key == pygame.K_RIGHT:
                     indicehorizontal = (indicehorizontal + 1) % (len(botoes_menu) if estado_menu == "menu" else len(botoes_saving))
 
                 elif evento.key == pygame.K_ESCAPE:
