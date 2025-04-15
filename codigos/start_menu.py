@@ -120,10 +120,12 @@ def mostrar_menu():
                 y_base += img.get_height() + 20
 
         elif estado_menu == "continuar":
-            x_base = 220
+            x_base = 360
+            tela.blit(frames[frame_index], (0, 0))
+            frame_index = (frame_index + 1) % len(frames)
             for i, botao in enumerate(botoes_saving):
                 img = botao["sel"] if i == indicehorizontal else botao["normal"]
-                tela.blit(img, (x_base, 640))
+                tela.blit(img, (x_base, 600))
                 x_base += img.get_width() + 20
 
         pygame.display.flip()
