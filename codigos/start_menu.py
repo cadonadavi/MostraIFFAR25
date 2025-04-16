@@ -2,7 +2,6 @@ import pygame
 import sys
 import os
 import config
-import jogo
 import creditos
 from pathlib import Path
 
@@ -18,7 +17,7 @@ def mostrar_menu():
             frame = pygame.image.load(os.path.join(caminho_frames, nome_arquivo))
             frame = pygame.transform.scale(frame, tela.get_size())
             frames.append(frame)
-
+    
     # Logo
     logo = pygame.transform.scale(pygame.image.load("imagens/logo.png"), (640, 322))
 
@@ -85,10 +84,11 @@ def mostrar_menu():
                             else:
                                 with open("save.txt", "a") as arquivo_save:
                                     arquivo_save.write("")
-                                jogo.executar()
+                                return "jogo"
 
                         elif botoes_menu[indicevertical]["nome"] == "Créditos":
                             creditos.executar_creditos()
+                            return "menu"
 
                         elif botoes_menu[indicevertical]["nome"] == "Sair":
                             pygame.quit()
@@ -96,12 +96,12 @@ def mostrar_menu():
 
                     elif estado_menu == "continuar":
                         if botoes_saving[indicehorizontal]["nome"] == "Continuar":
-                            jogo.executar()
+                            return "jogo"
                         
                         elif botoes_saving[indicehorizontal]["nome"] == "Novo Jogo":
                             with open("save.txt", "w") as arquivo_save:
                                 arquivo_save.write("")
-                            jogo.executar()
+                            return "jogo"
                         
                         elif botoes_saving[indicehorizontal]["nome"] == "Voltar":
                             estado_menu = "menu"                      

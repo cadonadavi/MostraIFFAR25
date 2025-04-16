@@ -1,6 +1,7 @@
 import pygame
 
 pygame.init()
+pygame.font.init()
 
 # Tela global
 tela = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
