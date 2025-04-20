@@ -4,6 +4,9 @@ import os
 import config
 import creditos
 from pathlib import Path
+from config import largura, altura
+
+fonte_titulo = pygame.font.SysFont("Arial", 48)
 
 def mostrar_menu():
     tela = config.tela
@@ -121,6 +124,11 @@ def mostrar_menu():
 
         elif estado_menu == "continuar":
             x_base = 360
+
+            mensagem = fonte_titulo.render("Pronto para continuar seu conto\nou começar um novo?", False, (255, 255, 255))
+            rect_texto = mensagem.get_rect(center=(largura // 2, altura // 2))
+            tela.blit(mensagem, rect_texto)            
+
             tela.blit(frames[frame_index], (0, 0))
             frame_index = (frame_index + 1) % len(frames)
             for i, botao in enumerate(botoes_saving):
