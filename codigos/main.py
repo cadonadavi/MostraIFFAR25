@@ -10,5 +10,5 @@ if __name__ == "__main__":
             estado = mostrar_menu()
         elif estado == "jogo":
             estado = jogo.executar()
-        elif estado == "créditos":
+        elif estado == "creditos":
             estado = creditos.executar_creditos()

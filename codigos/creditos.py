@@ -2,6 +2,7 @@ import pygame
 import sys
 import config
 import os
+import start_menu
 
 def executar_creditos():
     tela = config.tela
@@ -27,7 +28,7 @@ def executar_creditos():
 
             elif evento.type == pygame.KEYDOWN:
                 if evento.key == pygame.K_RETURN:
-                    return
+                    start_menu.mostrar_menu()
 
         # menu mesmo
         tela.fill((116, 186, 245))

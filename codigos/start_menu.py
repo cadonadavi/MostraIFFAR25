@@ -111,7 +111,7 @@ def mostrar_menu():
 
                     elif botoes_menu[indicevertical]["nome"] == "Créditos":
                         creditos.executar_creditos()
-                        return "menu"
+                        return "creditos"
 
                     elif botoes_menu[indicevertical]["nome"] == "Sair":
                         pygame.quit()
