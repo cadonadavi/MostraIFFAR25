@@ -10,20 +10,43 @@ def criar_save():
     with open(save_path, "w") as f:
         f.write("save iniciado\n")
 
-def charcater_select_menu(tela):
-    # Transição
-    frames_menu = []
-    caminho_frames = "imagens/gifceu/transicao"
+def charcater_select_menu(tela, clock):
+    # Botões
+    def carregar_botao_personagem(normal_path, selecionado_path):
+        normal = pygame.image.load(normal_path)
+        selecionado = pygame.image.load(selecionado_path)
+        return pygame.transform.scale(normal, (200, 400)), pygame.transform.scale(selecionado, (280, 560))
+    
+    adm_fem, adm_fem_sel = carregar_botao_personagem("imagens/botoes/admfem.png", "imagens/botoes/admfem_selected.png")
+    adm_mas, adm_mas_sel = carregar_botao_personagem("imagens/botoes/admmas.png", "imagens/botoes/admmas_selected.png")
+    agro_fem, agro_fem_sel = carregar_botao_personagem("imagens/botoes/agrofem.png", "imagens/botoes/agrofem_selected.png")
+    agro_mas, agro_mas_sel = carregar_botao_personagem("imagens/botoes/agromas.png", "imagens/botoes/agromas_selected.png")
+    ti_fem, ti_fem_sel = carregar_botao_personagem("imagens/botoes/tifem.png", "imagens/botoes/tifem_selected.png")
+    ti_mas, ti_mas_sel = carregar_botao_personagem("imagens/botoes/timas.png", "imagens/botoes/timas_selected.png")
+
+    botoes_personagens = [
+        {"normal": adm_fem, "sel": adm_fem_sel, "nome": "Guria ADM"},
+        {"normal": adm_mas, "sel": adm_mas_sel, "nome": "Piá ADM"},
+        {"normal": agro_fem, "sel": agro_fem_sel, "nome": "Guria Agro"},
+        {"normal": agro_mas, "sel": agro_mas_sel, "nome": "Piá Agro"},
+        {"normal": ti_fem, "sel": ti_fem_sel, "nome": "Guria TI"},
+        {"normal": ti_mas, "sel": ti_mas_sel, "nome": "Piá TI"}
+    ]
+
+    indice_horizontal = 0
+
+    # Fundo animado
+    frames = []
+    caminho_frames = "imagens/gifceu/menu"
     for nome_arquivo in sorted(os.listdir(caminho_frames)):
         if nome_arquivo.endswith(".png") or nome_arquivo.endswith(".jpg"):
             frame = pygame.image.load(os.path.join(caminho_frames, nome_arquivo))
             frame = pygame.transform.scale(frame, tela.get_size())
-            frames_menu.append(frame)
+            frames.append(frame)
+    
+    frame_index = 0
 
-    for frame in frames_menu:
-        tela.blit(frame, (0, 0))
-        pygame.display.flip()
-
+    # Mecânicas dessa parte
     while True:
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:
@@ -32,12 +55,32 @@ def charcater_select_menu(tela):
 
             elif evento.type == pygame.KEYDOWN:
                 if evento.key == pygame.K_ESCAPE:
-                    return
+                    mostrar_menu()
+                
+                elif evento.key == pygame.K_a or evento.key == pygame.K_LEFT:
+                    indice_horizontal = (indice_horizontal - 1) % (len(botoes_personagens))
+
+                elif evento.key == pygame.K_d or evento.key == pygame.K_RIGHT:
+                    indice_horizontal = (indice_horizontal + 1) % (len(botoes_personagens))
 
         # menu mesmo
-        tela.fill((116, 186, 245))
+        tela.blit(frames[frame_index], (0, 0))
+        frame_index = (frame_index + 1) % len(frames)
+
+        texto = pygame.image.load("imagens\select_script.png")
+        texto_menu = pygame.transform.scale(texto, (972, 84))
+        texto_rect = texto_menu.get_rect(center=(tela.get_width() // 2, 142))
+        tela.blit(texto_menu, texto_rect)
+
+        x_base = 96
+
+        for i, botao in enumerate(botoes_personagens):
+            img = botao["sel"] if i == indice_horizontal else botao["normal"]
+            tela.blit(img, (x_base, 240))
+            x_base += img.get_width() + 20
 
         pygame.display.flip()
+        clock.tick(10)
 
 def mostrar_menu():
     tela = config.tela
@@ -104,7 +147,7 @@ def mostrar_menu():
                 elif evento.key == pygame.K_RETURN:
                     if botoes_menu[indicevertical]["nome"] == "Start":
                         if estado_menu == "menu":
-                            charcater_select_menu(tela)
+                            charcater_select_menu(tela, clock)
                             return "jogo"
                         else:
                             return "jogo"
