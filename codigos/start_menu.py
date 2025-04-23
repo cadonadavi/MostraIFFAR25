@@ -67,7 +67,7 @@ def charcater_select_menu(tela, clock):
         tela.blit(frames[frame_index], (0, 0))
         frame_index = (frame_index + 1) % len(frames)
 
-        texto = pygame.image.load("imagens\select_script.png")
+        texto = pygame.image.load("imagens/select_script.png")
         texto_menu = pygame.transform.scale(texto, (972, 84))
         texto_rect = texto_menu.get_rect(center=(tela.get_width() // 2, 142))
         tela.blit(texto_menu, texto_rect)
