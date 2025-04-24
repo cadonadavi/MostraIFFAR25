@@ -72,7 +72,7 @@ def charcater_select_menu(tela, clock):
         texto_rect = texto_menu.get_rect(center=(tela.get_width() // 2, 142))
         tela.blit(texto_menu, texto_rect)
 
-        x_base = 96
+        x_base = (tela.get_width() - 1380) // 2
 
         for i, botao in enumerate(botoes_personagens):
             img = botao["sel"] if i == indice_horizontal else botao["normal"]
@@ -167,8 +167,12 @@ def mostrar_menu():
         tela.blit(frames[frame_index], (0, 0))
         frame_index = (frame_index + 1) % len(frames)
 
-        logo_rect = logo.get_rect(center=(tela.get_width() // 2, 280))
-        tela.blit(logo, logo_rect)
+        x_logo = (tela.get_width() - 640) // 2
+        if estado_menu == "continuar":
+            y_logo = (tela.get_height() - 692) // 2
+        else:
+            y_logo = (tela.get_height() - 612) // 2
+        tela.blit(logo, (x_logo, y_logo))
 
         y_base = 480
 
