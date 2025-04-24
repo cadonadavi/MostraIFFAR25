@@ -174,7 +174,7 @@ def mostrar_menu():
             y_logo = (tela.get_height() - 612) // 2
         tela.blit(logo, (x_logo, y_logo))
 
-        y_base = 480
+        y_base = logo.get_height() + 40 + y_logo
 
         if estado_menu == "menu":
             for i, botao in enumerate(botoes_menu):
