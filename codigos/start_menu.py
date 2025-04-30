@@ -15,7 +15,16 @@ def charcater_select_menu(tela, clock):
     def carregar_botao_personagem(normal_path, selecionado_path):
         normal = pygame.image.load(normal_path)
         selecionado = pygame.image.load(selecionado_path)
-        return pygame.transform.scale(normal, (200, 400)), pygame.transform.scale(selecionado, (280, 560))
+
+        # não faço ideia de onde vem 10% e 37% mas ta aí e funcionou
+
+        largura_normal = int(tela.get_width() * 0.1)  # 10% of screen width
+        altura_normal = int(tela.get_height() * 0.37)  # type: ignore # 37% of screen height
+        
+        largura_sel = int(largura_normal * 1.4)  # 40% larger than normal
+        altura_sel = int(altura_normal * 1.4)  # 40% larger than normal
+        
+        return pygame.transform.scale(normal, (largura_normal, altura_normal)), pygame.transform.scale(selecionado, (largura_sel, altura_sel))
     
     adm_fem, adm_fem_sel = carregar_botao_personagem("imagens/botoes/admfem.png", "imagens/botoes/admfem_selected.png")
     adm_mas, adm_mas_sel = carregar_botao_personagem("imagens/botoes/admmas.png", "imagens/botoes/admmas_selected.png")
@@ -72,7 +81,16 @@ def charcater_select_menu(tela, clock):
         texto_rect = texto_menu.get_rect(center=(tela.get_width() // 2, 142))
         tela.blit(texto_menu, texto_rect)
 
-        x_base = (tela.get_width() - 1380) // 2
+        # considerando que os botões selecionados são mais longos
+        largura_total = 0
+        for i, botao in enumerate(botoes_personagens):
+            # saber em qual mano está
+            if i == indice_horizontal:
+                largura_total += botao["sel"].get_width()
+            else:
+                largura_total += botao["normal"].get_width()
+        largura_total += (len(botoes_personagens) - 1) * 20  # adiciona os espaços
+        x_base = (tela.get_width() - largura_total) // 2
 
         for i, botao in enumerate(botoes_personagens):
             img = botao["sel"] if i == indice_horizontal else botao["normal"]
